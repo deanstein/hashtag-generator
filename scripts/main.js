@@ -16,16 +16,21 @@ function generateHashtags()
 
         // generate car hashes
         for (i=0; i < carDataSplit.length; i++) 
-            {   // add hash to each item
+            {   
+                // add hash to each item
                 carHash = hash + carDataSplit[i];
                 console.log("Variable carHash = " + carHash);
+
                 // add newly hashed items to an empty array
-                carHashArray.push(carHash);
+                carHashArray.push(carHash);      
                 console.log("Variable carHashArray = " + carHashArray);
             }
-        carHashArray = carHashArray.toString();
-        finalCarHashtags = carHashArray.replace(",", " "); 
-        console.log(finalCarHashtags);
+
+        carHashString = carHashArray.toString(); 
+        console.log("Variable carHashString = " + carHashString);
+        finalCarHashtags = carHashString.replace(/,/g, " ");
+        console.log("Variable finalCarHashtags = " + finalCarHashtags)
+
         
         } else if (carCheck === "No" || carCheck === "no" || carCheck === "n" || carCheck === "N" || carCheck === "no ")
         {
