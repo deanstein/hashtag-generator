@@ -1,7 +1,17 @@
-.myclass {
+.header {
+    font-size: 15px;
+    font-family: sans-serif;
+    color: darkgrey;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.firstDiv {
+    background-color: pink;
     color: black;
 }
 
-#main {
-    color: black;
+.spacerDiv 
+{
+    background-color: lightblue;
 }
