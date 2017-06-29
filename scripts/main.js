@@ -1,50 +1,72 @@
 var hash = "#";
-function generateHashtags() 
+function generateInputHashtags() 
 {
+    // generic converter function to convert input to hashtag strings
+    function convertInput(data, dataType)
+    {
+        // split the incoming data at each space character
+        dataSplit = data.split(" ");
+        console.log(dataType + ".split = " + dataSplit);
+
+        // set empty array
+        dataHashArray = [];
+
+        // generate hashes
+        for (i = 0; i < dataSplit.length; i++)
+        {
+            // add hash to each item
+            dataHash = hash + dataSplit[i];
+            console.log(dataType + ".hash = " + dataHash);
+
+            // add newly hashed items to an empty array
+            dataHashArray.push(dataHash);
+            console.log(dataType + ".hashArray =" + dataHashArray);
+        }
+
+        // convert to string
+        dataHashString = dataHashArray.toString();
+        console.log(dataType + ".hashString = " + dataHashString);
+
+        // replace commas with spaces
+        finalDataHashtags = dataHashString.replace(/,/g, " ");
+        console.log(dataType + ".finalHashTags = " + finalDataHashtags);
+
+        return finalDataHashtags;
+    }
+
     // check if car
     var carCheck = prompt("Is this a car?");
     if (carCheck === "Yes" || carCheck === "yes" || carCheck === "y" || carCheck === "Y" || carCheck === "yes ")
         {
-        // get car data 
-        carData = prompt("Enter the year, make, and model");
-        console.log("Variable carData = " + carData);
-        carDataSplit = carData.split(" ");
-        console.log("Variable carDataSplit = " + carDataSplit);
 
-        // set empty array
-        carHashArray = [];
-
-        // generate car hashes
-        for (i=0; i < carDataSplit.length; i++) 
-            {   
-                // add hash to each item
-                carHash = hash + carDataSplit[i];
-                console.log("Variable carHash = " + carHash);
-
-                // add newly hashed items to an empty array
-                carHashArray.push(carHash);      
-                console.log("Variable carHashArray = " + carHashArray);
-            }
-
-        carHashString = carHashArray.toString(); 
-        console.log("Variable carHashString = " + carHashString);
-        finalCarHashtags = carHashString.replace(/,/g, " ");
-        console.log("Variable finalCarHashtags = " + finalCarHashtags)
+        carData = prompt("Enter car information keywords (year, make, model...) separated by spaces");
+        carDataType = "carData";
+        finalCarHashtags = convertInput(carData, carDataType);
 
         
         } else if (carCheck === "No" || carCheck === "no" || carCheck === "n" || carCheck === "N" || carCheck === "no ")
         {
         // generate other hashes
-            var otherData = prompt("Add other keywords");
-        } else 
-        {
-            alert("I don't understand. Try again.");
+            var otherData = prompt("Describe the subject with keywords separated by spaces");
         }
 
-}
+    locationData = prompt("Enter location keywords separated by spaces");
+    
+    function getLocation()
+    {
+        // get location data
+        locationDataType = "locationData";
+        finalLocationHashtags = convertInput(locationData, locationDataType);
+    }
 
+    // if locationData was entered, run the function
+    if (locationData)
+    {
+        getLocation();
+    }
+}
 // execute hashtag generation
-generateHashtags();
+generateInputHashtags();
 
 function bodyHTML() 
 {
@@ -100,13 +122,28 @@ function bodyHTML()
     }
     spacerDiv();
 
+    function locationDiv()
+    {
+        locationDiv = document.createElement("div");
+        locationDiv.className = "locationDiv";
+        locationDivText = document.createTextNode(finalLocationHashtags);
+        locationDiv.appendChild(locationDivText);
+        document.body.appendChild(locationDiv);
+    }
+    locationDiv();
+
+    // if location data is present, add another spacer
+    if (locationData) {
+        spacerDiv();
+    }
+
     function bonusDiv()
     {
         bonusDiv = document.createElement("div");
         bonusDiv.className = "bonusDiv";
 
-        finalCarBonusHashtags = "#fun"
-        finalGenericBonusHashtags = ['#instagood', '#igers']
+        carBonusHashtagArray = ['#cars', '#ride', '#drive', '#driver', '#vehicle', '#street', '#random', '#funcar']
+        genericBonusHashtagArray = ['#instagood', '#igers']
 
         if (carData)
         {
@@ -120,7 +157,7 @@ function bodyHTML()
         bonusDiv.appendChild(bonusDivText);
         document.body.appendChild(bonusDiv);
     }
-    bonusDiv();
+    //bonusDiv();
 
 }
 

@@ -11,7 +11,10 @@
     color: black;
 }
 
-.spacerDiv 
-{
+.spacerDiv {
     background-color: lightblue;
+}
+
+.locationDiv {
+    background-color: lightgreen;
 }
