@@ -1,39 +1,40 @@
-var hash = "#";
-function generateInputHashtags() 
+hash = "#";
+
+// generic converter function to convert input to hashtag strings
+function convertInput(data, dataType)
 {
-    // generic converter function to convert input to hashtag strings
-    function convertInput(data, dataType)
+    // split the incoming data at each space character
+    dataSplit = data.split(" ");
+    console.log(dataType + ".split = " + dataSplit);
+
+    // set empty array
+    dataHashArray = [];
+
+    // generate hashes
+    for (i = 0; i < dataSplit.length; i++)
     {
-        // split the incoming data at each space character
-        dataSplit = data.split(" ");
-        console.log(dataType + ".split = " + dataSplit);
+        // add hash to each item
+        dataHash = hash + dataSplit[i];
+        console.log(dataType + ".hash = " + dataHash);
 
-        // set empty array
-        dataHashArray = [];
-
-        // generate hashes
-        for (i = 0; i < dataSplit.length; i++)
-        {
-            // add hash to each item
-            dataHash = hash + dataSplit[i];
-            console.log(dataType + ".hash = " + dataHash);
-
-            // add newly hashed items to an empty array
-            dataHashArray.push(dataHash);
-            console.log(dataType + ".hashArray =" + dataHashArray);
-        }
-
-        // convert to string
-        dataHashString = dataHashArray.toString();
-        console.log(dataType + ".hashString = " + dataHashString);
-
-        // replace commas with spaces
-        finalDataHashtags = dataHashString.replace(/,/g, " ");
-        console.log(dataType + ".finalHashTags = " + finalDataHashtags);
-
-        return finalDataHashtags;
+        // add newly hashed items to an empty array
+        dataHashArray.push(dataHash);
+        console.log(dataType + ".hashArray =" + dataHashArray);
     }
 
+    // convert to string
+    dataHashString = dataHashArray.toString();
+    console.log(dataType + ".hashString = " + dataHashString);
+
+    // replace commas with spaces
+    finalDataHashtags = dataHashString.replace(/,/g, " ");
+    console.log(dataType + ".finalHashTags = " + finalDataHashtags);
+
+    return finalDataHashtags;
+}
+
+function generateInputHashtags() 
+{
     // check if car
     var carCheck = prompt("Is this a car?");
     if (carCheck === "Yes" || carCheck === "yes" || carCheck === "y" || carCheck === "Y" || carCheck === "yes ")
@@ -147,17 +148,27 @@ function bodyHTML()
 
         if (carData)
         {
+            carBonusDataType = "carBonusData";
+            //finalCarBonusHashtags = convertInput(carBonusHashtagArray, carBonusDataType);
+
+             // convert to string
+            carBonusString = carBonusHashtagArray.toString();
+            console.log(carBonusDataType + ".hashString = " + carBonusString);
+
+            // replace commas with spaces
+            finalCarBonusHashtags = carBonusString.replace(/,/g, " ");
+            console.log(carBonusDataType + ".finalHashTags = " + finalCarBonusHashtags);
             var bonusDivText = document.createTextNode(finalCarBonusHashtags);
         } 
         else
         {
-            var bonusDivText = document.createTextNode(finalGenericBonusHashtags);
+            var bonusDivText = document.createTextNode(genericBonusHashtagArray);
         }
 
         bonusDiv.appendChild(bonusDivText);
         document.body.appendChild(bonusDiv);
     }
-    //bonusDiv();
+    bonusDiv();
 
 }
 
