@@ -33,10 +33,26 @@ function convertInput(data, dataType)
     return finalDataHashtags;
 }
 
+// generic converter function to convert array to hashtag strings
+function convertArray(data, dataType)
+    {
+
+    // convert to string
+    dataHashString = data.toString();
+    console.log(dataType + ".hashString = " + dataHashString);
+
+    // replace commas with spaces
+    finalDataHashtags = dataHashString.replace(/,/g, " ");
+    console.log(dataType + ".finalHashTags = " + finalDataHashtags);
+
+    return finalDataHashtags;
+
+    }
+
 function generateInputHashtags() 
 {
     // check if car
-    var carCheck = prompt("Is this a car?");
+    carCheck = prompt("Is this a car?");
     if (carCheck === "Yes" || carCheck === "yes" || carCheck === "y" || carCheck === "Y" || carCheck === "yes ")
         {
 
@@ -51,6 +67,7 @@ function generateInputHashtags()
             var otherData = prompt("Describe the subject with keywords separated by spaces");
         }
 
+    // get location data
     locationData = prompt("Enter location keywords separated by spaces");
     
     function getLocation()
@@ -149,16 +166,10 @@ function bodyHTML()
         if (carData)
         {
             carBonusDataType = "carBonusData";
-            //finalCarBonusHashtags = convertInput(carBonusHashtagArray, carBonusDataType);
 
-             // convert to string
-            carBonusString = carBonusHashtagArray.toString();
-            console.log(carBonusDataType + ".hashString = " + carBonusString);
+            finalCarBonusHashtags = convertArray(carBonusHashtagArray, carBonusDataType);
 
-            // replace commas with spaces
-            finalCarBonusHashtags = carBonusString.replace(/,/g, " ");
-            console.log(carBonusDataType + ".finalHashTags = " + finalCarBonusHashtags);
-            var bonusDivText = document.createTextNode(finalCarBonusHashtags);
+            bonusDivText = document.createTextNode(finalCarBonusHashtags);
         } 
         else
         {
