@@ -1,4 +1,8 @@
+scriptVersion = "1.00.0";
+doDisplayVersion = false;
+
 hash = "#";
+maxHashtags = 30;
 
 // generic converter function to convert input to hashtag strings
 function convertInput(data, dataType)
@@ -56,6 +60,7 @@ function generateInputHashtags()
     if (carCheck === "Yes" || carCheck === "yes" || carCheck === "y" || carCheck === "Y" || carCheck === "yes ")
         {
 
+        // get car data
         carData = prompt("Enter car information keywords (year, make, model...) separated by spaces");
         carDataType = "carData";
         finalCarHashtags = convertInput(carData, carDataType);
@@ -63,13 +68,14 @@ function generateInputHashtags()
         
         } else if (carCheck === "No" || carCheck === "no" || carCheck === "n" || carCheck === "N" || carCheck === "no ")
         {
-        // generate other hashes
+        // get generic data
             var otherData = prompt("Describe the subject with keywords separated by spaces");
         }
 
     // get location data
     locationData = prompt("Enter location keywords separated by spaces");
     
+    // define how to convert location input
     function getLocation()
     {
         // get location data
@@ -77,7 +83,7 @@ function generateInputHashtags()
         finalLocationHashtags = convertInput(locationData, locationDataType);
     }
 
-    // if locationData was entered, run the function
+    // if locationData was entered, run the conversion function
     if (locationData)
     {
         getLocation();
@@ -92,7 +98,7 @@ function bodyHTML()
     {
         var headerDiv = document.createElement("div");
         headerDiv.className = "header";
-        var headerText = document.createTextNode("Hashtag Generator");
+        var headerText = document.createTextNode("Hashtag Generator  |  v" + scriptVersion + "  |  " + "Active hashes: " + maxHashtags);
         headerDiv.appendChild(headerText);
         document.body.appendChild(headerDiv);
     }
@@ -115,6 +121,7 @@ function bodyHTML()
         firstDiv.appendChild(firstDivText);
         document.body.appendChild(firstDiv);
     }
+    // draw the first div
     firstDiv();
 
     function spacerDiv()
@@ -138,6 +145,7 @@ function bodyHTML()
         }
         spacerLines(spacerSymbol, spacerQuantity);
     }
+    //draw the spacer div
     spacerDiv();
 
     function locationDiv()
@@ -148,6 +156,7 @@ function bodyHTML()
         locationDiv.appendChild(locationDivText);
         document.body.appendChild(locationDiv);
     }
+    //draw the location div
     locationDiv();
 
     // if location data is present, add another spacer
@@ -160,8 +169,9 @@ function bodyHTML()
         bonusDiv = document.createElement("div");
         bonusDiv.className = "bonusDiv";
 
-        carBonusHashtagArray = ['#cars', '#ride', '#drive', '#driver', '#vehicle', '#street', '#random', '#funcar']
+        carBonusHashtagArray = ['#cars', '#ride', '#drive', '#driver', '#vehicle', '#street', '#random', '#funcar', '#classic', '#classiccars', '#antiquecar', '#carsgram', '#auto', '#speed', '#carpic', '#carsofinstagram', '#obscure', '#obscurecars', '#randomcars', '#anotherera', '#timewarp', '#nostalgia', '#treasure', '#carfinds', '#carclub', '#instauto', '#carstagram', '#motor']
         genericBonusHashtagArray = ['#instagood', '#igers']
+
 
         if (carData)
         {
@@ -170,17 +180,59 @@ function bodyHTML()
             finalCarBonusHashtags = convertArray(carBonusHashtagArray, carBonusDataType);
 
             bonusDivText = document.createTextNode(finalCarBonusHashtags);
+
+            // count how many hashtags are found in each hashtag string, and add them together
+            carHashtagArrayTotalLength = ((finalCarHashtags.split(hash).length-1) + (finalLocationHashtags.split(hash).length-1) + finalCarBonusHashtags.split(hash).length-1);
+            console.log("finalCarHashtags # occurence = " + carHashtagArrayTotalLength);
+
+            // test array length for compliance with maxHashtags rule, and trim if it's too long
+            if (carHashtagArrayTotalLength > maxHashtags) 
+            {
+                delta = carHashtagArrayTotalLength - maxHashtags;
+                console.log("Number of hashes removed = " + delta);
+
+                // trim the array
+                carBonusHashtagArrayTrimmed = carBonusHashtagArray.splice(0, carBonusHashtagArray.length - delta);
+
+                // redefine the bonus tags using their trimmed version
+                carBonusHashtagArray = carBonusHashtagArrayTrimmed;
+            }
+
+            finalCarBonusHashtags = convertArray(carBonusHashtagArray, carBonusDataType);
+
+            bonusDivText = document.createTextNode(finalCarBonusHashtags);
+
         } 
         else
         {
-            var bonusDivText = document.createTextNode(genericBonusHashtagArray);
+            genericBonusDataType = "genericBonusData";
+
+            finalGenericBonusHashtags = convertArray(genericBonusHashtagArray, genericBonusDataType);
+
+            bonusDivText = document.createTextNode(finalGenericBonusHashtags);
         }
 
         bonusDiv.appendChild(bonusDivText);
         document.body.appendChild(bonusDiv);
     }
+    // draw the bonus div
     bonusDiv();
 
+    function versionDiv() 
+    {
+        versionDiv = document.createElement("div");
+        versionDiv.className = "versionDiv";
+        versionDivText = document.createTextNode(scriptVersion);
+        versionDiv.appendChild(versionDivText);
+        document.body.appendChild(versionDiv);
+    }
+
+    // if display version is true, draw a spacer and the version div
+    if (doDisplayVersion) 
+    {
+        spacerDiv();
+        versionDiv();
+    }
 }
 
 // execute the body HTML
