@@ -1,4 +1,4 @@
-scriptVersion = "1.00.2";
+scriptVersion = "1.00.3";
 doDisplayVersion = false;
 
 hash = "#";
@@ -169,7 +169,7 @@ function bodyHTML()
         bonusDiv = document.createElement("div");
         bonusDiv.className = "bonusDiv";
 
-        carBonusHashtagArray = ['#cars', '#ride', '#drive', '#vehicle', '#street', '#random', '#funcar', '#classic', '#classiccars', '#carsgram', '#auto', '#speed', '#carpic', '#carsofinstagram', '#obscure', '#obscurecars', '#randomcars', '#anotherera', '#oldiebutgoodie', '#timewarp', '#nostalgia', '#treasure', '#carfinds', '#carclub', '#instauto', '#carstagram', '#motor']
+        carBonusHashtagArray = ['#carfinds', '#ride', '#drive', '#car', '#cars', '#funcar', '#classic', '#classiccars', '#carsgram', '#auto', '#speed', '#carpic', '#carsofinstagram', '#nostalgia', '#treasure', '#obscure', '#random', '#obscurecars', '#randomcars', '#anotherera', '#oldiebutgoodie', '#timewarp', '#carclub', '#instauto', '#carstagram', '#motor', '#street',]
         genericBonusHashtagArray = ['#instagood', '#igers']
 
 
