@@ -1,28 +1,55 @@
-.header {
+* {
     font-size: 15px;
     font-family: sans-serif;
     color: darkgrey;
+}
+
+.header {
     margin-top: 15px;
     margin-bottom: 15px;
 }
 
-.firstDiv {
-    background-color: pink;
-    color: black;
+.welcomeMessage {
+    font-size: 20px;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+
+/**** common styles ****/
+
+.formElementContainer {
+    display: block;
+}
+
+.formInput {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.formInputLabel {
+    padding-left: 10px;
 }
 
 .spacerDiv {
     background-color: lightblue;
 }
 
-.locationDiv {
+/*** all result hashtags size ***/
+.finalMakeModelHashtags, .finalLocationHashtags, .finalCarBonusHashtags, spacerDiv {
+    font-size: 26px;
+}
+
+/**** nostalgia.obscura ****/
+
+.finalMakeModelHashtags {
+    background-color: pink;
+    color: black;
+}
+
+.finalLocationHashtags {
     background-color: lightgreen;
 }
 
-.bonusDiv {
+.finalCarBonusHashtags {
     background-color: lightyellow;
-}
-
-.versionDiv {
-    background-color: lightgrey;
 }
