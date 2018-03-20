@@ -17,11 +17,11 @@ for (a = 0; a <= hashtagType1RequiredInputArray.length - 1; a++)
 var hashtagType2 = "cinderellacityproject";
 
 // define how to convert input to hashtag strings
-function convertStringToHashtags(data, dataType)
+function convertStringToHashtags(data)
 {
     // split the incoming data at each space character
     dataSplit = data.split(" ");
-    console.log(dataType + ".split = " + dataSplit);
+    console.log("dataSplit = " + dataSplit);
 
     // set empty array
     dataHashArray = [];
@@ -31,35 +31,35 @@ function convertStringToHashtags(data, dataType)
     {
         // add hash to each item
         dataHash = hash + dataSplit[i];
-        console.log(dataType + ".hash = " + dataHash);
+        console.log("dataHash = " + dataHash);
 
         // add newly hashed items to an empty array
         dataHashArray.push(dataHash);
-        console.log(dataType + ".hashArray =" + dataHashArray);
+        console.log("dataHashArray =" + dataHashArray);
     }
 
     // convert to string
     dataHashString = dataHashArray.toString();
-    console.log(dataType + ".hashString = " + dataHashString);
+    console.log("dataHashString = " + dataHashString);
 
     // replace commas with spaces
     finalDataHashtags = dataHashString.replace(/,/g, " ");
-    console.log(dataType + ".finalHashTags = " + finalDataHashtags);
+    console.log("finalDataHashTags = " + finalDataHashtags);
 
     return finalDataHashtags;
 }
 
 // define how to convert array to hashtag strings
-function convertArrayToHashtags(data, dataType)
+function convertArrayToHashtags(data)
 {
 
     // convert to string
     dataHashString = data.toString();
-    console.log(dataType + ".hashString = " + dataHashString);
+    console.log(".hashString = " + dataHashString);
 
     // replace commas with spaces
     finalDataHashtags = dataHashString.replace(/,/g, " ");
-    console.log(dataType + ".finalHashTags = " + finalDataHashtags);
+    console.log(".finalHashTags = " + finalDataHashtags);
 
     return finalDataHashtags;
 }
@@ -68,20 +68,20 @@ function convertArrayToHashtags(data, dataType)
 function getDataFromTextbox(id) 
 {
     var textbox = document.getElementById(id);
-    console.log("received input for " + textbox + ": " + textbox.value);
+    console.log("seeing textbox input for " + textbox.id + ": " + textbox.value);
     return textbox.value;
 }
 
 // define how to get/update the data in all important text boxes and return the data as an array
 var receivedInputArray = [];
-function updateInputFormContents(inputIDArray)
+function getInputFormContents(inputIDArray)
 {
     for (var j = 0; j <= inputIDArray.length - 1; j++)
     {
         var inputData = getDataFromTextbox(inputIDArray[j]);
         receivedInputArray.push(inputData);
     }
-    console.log("received the following inputs: " + receivedInputArray);
+    //console.log("seeing the following inputs: " + receivedInputArray);
     receivedInputArray = [];
     return receivedInputArray;
 }
@@ -183,7 +183,8 @@ function drawTypicalTextboxAndLabel(containerDiv, inputName, inputLabel, default
 function drawHashtagResultsDiv(containerDiv, divContents, divClass)
 {
     var hashtagResultsDiv = document.createElement("div");
-    hashtagResultsDiv.className = divClass;
+    hashtagResultsDiv.id = divClass + "Results";
+    hashtagResultsDiv.className = divClass + "Results";
     hashtagResultsDiv.innerHTML = divContents;
     containerDiv.appendChild(hashtagResultsDiv);
 }
@@ -211,6 +212,12 @@ function drawSpacerDiv(containerDiv)
     spacerLines(spacerSymbol, spacerQuantity);
 }
 
+// define how to update the hashtag results div with the updated input
+function updateInnerHTML(divID, string)
+{
+    document.getElementById(divID).innerHTML = string;
+}
+
 /*** type1 specific divs ***/
 
 // define how to draw the hashtagType1 forms div
@@ -228,10 +235,16 @@ function drawHashtagType1FormsDiv()
     }
 
     // for each text box, set the upkey action to trigger the content check update
-    for (var b = 0; b <= hashtagType1RequiredInputIDArray.length - 1; b++)
+    for (var b = 0; b < hashtagType1RequiredInputIDArray.length - 1; b++)
     {
         //console.log(hashtagType1RequiredInputIDArray[b]);
-        document.getElementById(hashtagType1RequiredInputIDArray[b]).onkeyup = function(){updateInputFormContents(hashtagType1RequiredInputIDArray)};
+        document.getElementById(hashtagType1RequiredInputArray[b]["ID"]).onkeyup = function()
+        {
+            var currentInputString = this.value;
+            var convertedInputString = convertStringToHashtags(currentInputString);
+            console.log("updating textbox ID " + this.id + " to include this new input text: " + convertedInputString);
+            updateInnerHTML(this.id + "Results", convertedInputString);
+        };
     }
     // create and append the hashtag count input
     var hashtagCountInputID = "hashtagCountInput";
@@ -268,12 +281,12 @@ function drawHashtagType1ResultsDiv()
     // if no make/model hashtags are provided, draw an empty div
     if (finalMakeModelHashtags == undefined)
     {
-        drawHashtagResultsDiv(type1ResultsDiv, [], "finalMakeModelHashtags");
+        drawHashtagResultsDiv(type1ResultsDiv, [], hashtagType1RequiredInputArray[0]["ID"]);
     }
     // otherwise, add the hashtags
     else 
     {
-        drawHashtagResultsDiv(type1ResultsDiv, finalMakeModelHashtags, "finalMakeModelHashtags");
+        drawHashtagResultsDiv(type1ResultsDiv, finalMakeModelHashtags, hashtagType1RequiredInputArray[0]["ID"]);
     }
 
     // define the bonus hashtags list
@@ -336,63 +349,3 @@ function drawHashtagType1MasterDiv()
 
 drawHeaderDiv();
 drawTypeCheckDiv();
-
-
-// create the body
-function bodyHTML() 
-{
-
-
-    //draw the spacer div
-    drawSpacerDiv();
-
-    function locationDiv()
-    {
-        locationDiv = document.createElement("div");
-        locationDiv.className = "locationDiv";
-        locationDivText = document.createTextNode(finalLocationHashtags);
-        locationDiv.appendChild(locationDivText);
-        document.body.appendChild(locationDiv);
-    }
-    //draw the location div
-    locationDiv();
-
-    // if location data is present, add another spacer
-    if (locationData) {
-        drawSpacerDiv();
-    }
-
-    function bonusDiv()
-    {
-        bonusDiv = document.createElement("div");
-        bonusDiv.className = "bonusDiv";
-
-
-        genericBonusHashtagArray = ['#instagood', '#igers']
-
-
-        if (carData)
-        {
-
-
-
-        } 
-        else
-        {
-            genericBonusDataType = "genericBonusData";
-
-            finalGenericBonusHashtags = convertArrayToHashtags(genericBonusHashtagArray, genericBonusDataType);
-
-            bonusDivText = document.createTextNode(finalGenericBonusHashtags);
-        }
-
-        bonusDiv.appendChild(bonusDivText);
-        document.body.appendChild(bonusDiv);
-    }
-    // draw the bonus div
-    bonusDiv();
-
-}
-
-// execute the body HTML
-//bodyHTML();

@@ -35,13 +35,13 @@
 }
 
 /*** all result hashtags size ***/
-.finalMakeModelHashtags, .finalLocationHashtags, .finalCarBonusHashtags, spacerDiv {
+.makeModelInputResults, .finalLocationHashtags, .finalCarBonusHashtagsResults, spacerDiv {
     font-size: 26px;
 }
 
 /**** nostalgia.obscura ****/
 
-.finalMakeModelHashtags {
+.makeModelInputResults {
     background-color: pink;
     color: black;
 }
@@ -50,6 +50,6 @@
     background-color: lightgreen;
 }
 
-.finalCarBonusHashtags {
+.finalCarBonusHashtagsResults {
     background-color: lightyellow;
 }
