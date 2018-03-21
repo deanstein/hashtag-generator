@@ -1,7 +1,7 @@
 * {
     font-size: 15px;
     font-family: sans-serif;
-    color: darkgrey;
+    color: rgb(94, 94, 94);
 }
 
 .header {
@@ -35,18 +35,17 @@
 }
 
 /*** all result hashtags size ***/
-.makeModelInputResults, .finalLocationHashtags, .finalCarBonusHashtagsResults, spacerDiv {
+.makeModelInputResults, .locationInputResults, .finalCarBonusHashtagsResults, spacerDiv {
     font-size: 26px;
 }
 
 /**** nostalgia.obscura ****/
 
 .makeModelInputResults {
-    background-color: pink;
-    color: black;
+    background-color: lightpink;
 }
 
-.finalLocationHashtags {
+.locationInputResults {
     background-color: lightgreen;
 }
 
