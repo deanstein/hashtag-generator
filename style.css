@@ -1,7 +1,6 @@
 * {
     font-size: 15px;
     font-family: sans-serif;
-    color: rgb(94, 94, 94);
 }
 
 .header {
@@ -15,6 +14,10 @@
     padding-bottom: 10px;
 }
 
+.typeCheck {
+    font-size: 18px;
+}
+
 /**** common styles ****/
 
 .formElementContainer {
@@ -26,15 +29,35 @@
     margin-bottom: 10px;
 }
 
+.button {
+    font-weight: bold;
+    color: white;
+    background-color: black;
+    border: 0px solid white;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
 .formInputLabel {
     padding-left: 10px;
 }
 
 .spacerDiv {
-    background-color: lightblue;
+    background-color: lavender;
 }
 
-/*** all result hashtags size ***/
+.formsContainerDiv {
+    background-color: white;
+}
+
+.resultsContainerDiv {
+    margin-top: 10px;
+    padding: 10px;
+    border: 5px solid black;
+    width: 350px;
+}
+
+/*** all resulting hashtags ***/
 .makeModelInputResults, .locationInputResults, .finalCarBonusHashtagsResults, spacerDiv {
     font-size: 26px;
 }
@@ -46,7 +69,7 @@
 }
 
 .locationInputResults {
-    background-color: lightgreen;
+    background-color: rgb(174, 221, 174);
 }
 
 .finalCarBonusHashtagsResults {

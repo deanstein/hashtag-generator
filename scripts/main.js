@@ -19,6 +19,12 @@ for (a = 0; a <= hashtagType1RequiredInputArray.length - 1; a++)
 
 // define hashTagType2
 var hashtagType2 = "cinderellacityproject";
+var hashtagType2RequiredInputArray = [{ID: "descriptionInput", label: "Additional Description"}, {ID: "mallLocationInput", label: "Location"}];
+var hashtagType2RequiredInputIDArray = [];
+for (a = 0; a <= hashtagType2RequiredInputArray.length - 1; a++)
+{
+    hashtagType2RequiredInputIDArray.push(hashtagType2RequiredInputArray[a]["ID"]);
+}
 
 // define how to convert input to hashtag strings
 function convertStringToHashtags(data)
@@ -30,16 +36,20 @@ function convertStringToHashtags(data)
     // set empty array
     dataHashArray = [];
 
-    // generate hashes
-    for (i = 0; i < dataSplit.length; i++)
+    // only generate hashes if the received data is not empty
+    if (dataSplit != "")
     {
-        // add hash to each item
-        dataHash = hash + dataSplit[i];
-        console.log("dataHash = " + dataHash);
+        // generate hashes
+        for (i = 0; i < dataSplit.length; i++)
+        {
+            // add hash to each item
+            dataHash = hash + dataSplit[i];
+            console.log("dataHash = " + dataHash);
 
-        // add newly hashed items to an empty array
-        dataHashArray.push(dataHash);
-        console.log("dataHashArray =" + dataHashArray);
+            // add newly hashed items to an empty array
+            dataHashArray.push(dataHash);
+            console.log("dataHashArray = " + dataHashArray);
+        }
     }
 
     // convert to string
@@ -51,6 +61,7 @@ function convertStringToHashtags(data)
     console.log("finalDataHashTags = " + finalDataHashtags);
 
     return finalDataHashtags;
+
 }
 
 // define how to convert array to hashtag strings
@@ -66,28 +77,6 @@ function convertArrayToHashtags(data)
     console.log(".finalHashTags = " + finalDataHashtags);
 
     return finalDataHashtags;
-}
-
-// define how to get the data from the text boxes
-function getDataFromTextbox(id) 
-{
-    var textbox = document.getElementById(id);
-    console.log("seeing textbox input for " + textbox.id + ": " + textbox.value);
-    return textbox.value;
-}
-
-// define how to get/update the data in all important text boxes and return the data as an array
-var receivedInputArray = [];
-function getInputFormContents(inputIDArray)
-{
-    for (var j = 0; j <= inputIDArray.length - 1; j++)
-    {
-        var inputData = getDataFromTextbox(inputIDArray[j]);
-        receivedInputArray.push(inputData);
-    }
-    //console.log("seeing the following inputs: " + receivedInputArray);
-    receivedInputArray = [];
-    return receivedInputArray;
 }
 
 /****** HTML instructions ******/
@@ -112,6 +101,7 @@ function drawTypeCheckDiv()
 
     // define the typecheck div
     var typeCheckDiv = document.createElement("form");
+    typeCheckDiv.className = "typeCheck";
     var typeCheckDivText = {};
 
     // define the type1 radio button
@@ -145,11 +135,16 @@ function drawTypeCheckDiv()
     document.body.appendChild(welcomeMessageDiv);
     document.body.appendChild(typeCheckDiv);
 
-    // define what happens when the type selectors are clicked
-    type1RadioButton.onclick = function() 
+    type1RadioButton.onclick = function()
     {
         drawHashtagType1MasterDiv();
     }
+
+    type2RadioButton.onclick = function()
+    {
+        drawHashtagType2MasterDiv();
+    }
+
 }
 
 /*** typical divs ***/
@@ -183,6 +178,19 @@ function drawTypicalTextboxAndLabel(containerDiv, inputName, inputLabel, default
     containerDiv.appendChild(formElementContainer);
 }
 
+// define how to draw the copy to clipboard button
+function drawCopyToClipboardButton(containerDiv)
+{
+    new ClipboardJS('button', {
+        container: document.getElementById(containerDiv)
+    });
+    copyToClipboardButton = document.createElement("button");
+    copyToClipboardButton.innerHTML = "Copy to Clipboard";
+    copyToClipboardButton.className = "button";
+    copyToClipboardButton.id = "copyToClipboardButton";
+    containerDiv.appendChild(copyToClipboardButton);
+}
+
 // define how to draw the typical hashtag results div
 function drawHashtagResultsDiv(containerDiv, divContents, divClass)
 {
@@ -194,19 +202,18 @@ function drawHashtagResultsDiv(containerDiv, divContents, divClass)
 }
 
 // define how to draw the typical hashtag results spacer div
-function drawHashtagResultsSpacerDiv(containerID)
+function drawHashtagResultsSpacerDiv(containerID, quantity)
 {
     var hashtagResultsSpacerDiv = document.createElement("div");
     hashtagResultsSpacerDiv.id = spacerID;
     hashtagResultsSpacerDiv.className = spacerID;
     hashtagResultsSpacerDiv.innerHTML = [];
-    containerID.appendChild(hashtagResultsSpacerDiv);
-}
-
-    /*for (i = 0; i < spacerQuantity; i++)
+    // draw the div as many times as specifid
+    for (i = 0; i <= quantity; i++)
     {
-
-    }*/
+        containerID.appendChild(hashtagResultsSpacerDiv);
+    }
+}
 
 // define how to update the hashtag results div with the updated input
 function updateInnerHTML(divID, string)
@@ -214,20 +221,20 @@ function updateInnerHTML(divID, string)
     document.getElementById(divID).innerHTML = string;
 }
 
-/*** type1 specific divs ***/
+/****** type1 specific divs ******/
 
-// define how to draw the hashtagType1 forms div
-function drawHashtagType1FormsDiv()
+// define how to draw the hashtagType1 forms container div
+function drawType1FormsContainerDiv()
 {
     // define the container div and append it to the body
-    var type1FormDiv = document.createElement("div");
-    document.body.appendChild(type1FormDiv);
-    type1FormDiv.class = "type1FormDiv";
+    var type1FormsContainerDiv = document.createElement("div");
+    document.body.appendChild(type1FormsContainerDiv);
+    type1FormsContainerDiv.className = "formsContainerDiv";
 
     // for each required input, create textboxes and labels
     for (var i = 0; i <= hashtagType1RequiredInputArray.length - 1; i++)
     {
-        drawTypicalTextboxAndLabel(type1FormDiv, hashtagType1RequiredInputArray[i]["ID"], hashtagType1RequiredInputArray[i]["label"]);
+        drawTypicalTextboxAndLabel(type1FormsContainerDiv, hashtagType1RequiredInputArray[i]["ID"], hashtagType1RequiredInputArray[i]["label"]);
     }
 
     // for each text box, set the upkey action to trigger the content check update
@@ -240,12 +247,20 @@ function drawHashtagType1FormsDiv()
             var convertedInputString = convertStringToHashtags(currentInputString);
             console.log("updating textbox ID " + this.id + " to include this new input text: " + convertedInputString);
             updateInnerHTML(this.id + "Results", convertedInputString);
-            updateInnerHTML(spacerID, spacerSymbol);
+            if (currentInputString != "")
+            {
+                updateInnerHTML(spacerID, spacerSymbol);
+            }
+            else if (currentInputString == "")
+            {
+                updateInnerHTML(spacerID, "");
+            }
+
         };
     }
     // create and append the hashtag count input
     var hashtagCountInputID = "hashtagCountInput";
-    drawTypicalTextboxAndLabel(type1FormDiv, hashtagCountInputID, "Max Hashtag Count", maxHashtags);
+    drawTypicalTextboxAndLabel(type1FormsContainerDiv, hashtagCountInputID, "Max Hashtag Count", maxHashtags);
     
 }
 
@@ -268,40 +283,43 @@ if (hashtagType1RequiredInputIDArray[1].value != undefined)
 }
 
 // define how to draw the type1 results div
-function drawHashtagType1ResultsDiv() 
+function drawType1ResultsContainerDiv() 
 {
     // define the container div and append it to the body
-    var type1ResultsDiv = document.createElement("div");
-    document.body.appendChild(type1ResultsDiv);
-    type1ResultsDiv.class = "type1ResultsDiv";
+    var type1ResultsContainerDiv = document.createElement("div");
+    document.body.appendChild(type1ResultsContainerDiv);
+    type1ResultsContainerDiv.className = "resultsContainerDiv";
+
+    // draw the copy to clipboard button
+    drawCopyToClipboardButton(type1ResultsContainerDiv);
 
     // if no make/model hashtags are provided, draw an empty div
     if (finalMakeModelHashtags == undefined)
     {
-        drawHashtagResultsDiv(type1ResultsDiv, [], hashtagType1RequiredInputArray[0]["ID"]);
+        drawHashtagResultsDiv(type1ResultsContainerDiv, [], hashtagType1RequiredInputArray[0]["ID"]);
     }
     // otherwise, add the hashtags
     else 
     {
-        drawHashtagResultsDiv(type1ResultsDiv, finalMakeModelHashtags, hashtagType1RequiredInputArray[0]["ID"]);
+        drawHashtagResultsDiv(type1ResultsContainerDiv, finalMakeModelHashtags, hashtagType1RequiredInputArray[0]["ID"]);
     }
 
-    // draw spacer div
-    drawHashtagResultsSpacerDiv(type1ResultsDiv);
+    // draw the spacer div
+    drawHashtagResultsSpacerDiv(type1ResultsContainerDiv, spacerQuantity);
 
     // if no location hashtags are provided, draw an empty div
     if (finalLocationHashtags == undefined)
     {
-        drawHashtagResultsDiv(type1ResultsDiv, [], hashtagType1RequiredInputArray[1]["ID"]);
+        drawHashtagResultsDiv(type1ResultsContainerDiv, [], hashtagType1RequiredInputArray[1]["ID"]);
     }
     // otherwise, add the hashtags
     else 
     {
-        drawHashtagResultsDiv(type1ResultsDiv, finalLocationHashtags, hashtagType1RequiredInputArray[1]["ID"]);
+        drawHashtagResultsDiv(type1ResultsContainerDiv, finalLocationHashtags, hashtagType1RequiredInputArray[1]["ID"]);
     }
 
-    // draw spacer div
-    drawHashtagResultsSpacerDiv(type1ResultsDiv);
+    // draw the spacer div
+    drawHashtagResultsSpacerDiv(type1ResultsContainerDiv, spacerQuantity);
 
     // define the bonus hashtags list
     var carBonusHashtagArray = ['#carfinds', '#ride', '#drive', '#car', '#cars', '#funcar', '#classic', '#classiccars', '#carsgram', '#auto', '#speed', '#carpic', '#carsofinstagram', '#nostalgia', '#treasure', '#obscure', '#random', '#obscurecars', '#randomcars', '#anotherera', '#oldiebutgoodie', '#timewarp', '#carclub', '#instauto', '#carstagram', '#motor', '#street']
@@ -349,16 +367,181 @@ function drawHashtagType1ResultsDiv()
     bonusDivText = document.createTextNode(finalCarBonusHashtags);
 
     // draw the bonus tag div
-    drawHashtagResultsDiv(type1ResultsDiv, finalCarBonusHashtags, "finalCarBonusHashtags");
+    drawHashtagResultsDiv(type1ResultsContainerDiv, finalCarBonusHashtags, "finalCarBonusHashtags");
 }
 
 // define how to draw the master type1 div
 function drawHashtagType1MasterDiv() 
 {
-    // draw the form divs
-    drawHashtagType1FormsDiv();
-    // draw the results divs
-    drawHashtagType1ResultsDiv();
+    // only draw the form and results divs if they haven't been built already
+    if ((document.getElementById(hashtagType1RequiredInputIDArray[0]) == undefined))
+    {
+        // draw the form divs
+        drawType1FormsContainerDiv();
+        // draw the results divs
+        drawType1ResultsContainerDiv();
+    }
+
+}
+
+/****** type2 specific divs ******/
+
+// define how to draw the hashtagType2 forms container div
+function drawType2FormsContainerDiv()
+{
+    // define the container div and append it to the body
+    var type2FormsContainerDiv = document.createElement("div");
+    document.body.appendChild(type2FormsContainerDiv);
+    type2FormsContainerDiv.className = "formsContainerDiv";
+
+    // for each required input, create textboxes and labels
+    for (var i = 0; i <= hashtagType2RequiredInputArray.length - 1; i++)
+    {
+        drawTypicalTextboxAndLabel(type2FormsContainerDiv, hashtagType2RequiredInputArray[i]["ID"], hashtagType2RequiredInputArray[i]["label"]);
+    }
+
+    // set the default location and convert to hashtags
+    document.getElementById(hashtagType2RequiredInputIDArray[1]).value = "englewood colorado cinderellacity cinderellacitymall";
+    finalMallLocationHashtags = convertStringToHashtags((document.getElementById(hashtagType2RequiredInputIDArray[1]).value));
+
+    // for each text box, set the upkey action to trigger the content check update
+    for (var b = 0; b < hashtagType2RequiredInputIDArray.length; b++)
+    {
+        //console.log(hashtagType1RequiredInputIDArray[b]);
+        document.getElementById(hashtagType2RequiredInputArray[b]["ID"]).onkeyup = function()
+        {
+            var currentInputString = this.value;
+            var convertedInputString = convertStringToHashtags(currentInputString);
+            console.log("updating textbox ID " + this.id + " to include this new input text: " + convertedInputString);
+            updateInnerHTML(this.id + "Results", convertedInputString);
+            if (currentInputString != "")
+            {
+                updateInnerHTML(spacerID, spacerSymbol);
+            }
+            else if (currentInputString == "")
+            {
+                updateInnerHTML(spacerID, "");
+            }
+
+        };
+    }
+    // create and append the hashtag count input
+    var hashtagCountInputID = "hashtagCountInput";
+    drawTypicalTextboxAndLabel(type2FormsContainerDiv, hashtagCountInputID, "Max Hashtag Count", maxHashtags);
+}
+
+// convert description input to hashtags if it's populated
+if (hashtagType2RequiredInputIDArray[0].value != undefined)
+{
+    var finalDescriptionHashtags = convertStringToHashtags(document.getElementById(hashtagType1RequiredInputIDArray[0]));
+} else 
+{
+    finalDescriptionHashtags = [];
+}
+
+// define how to draw the type2 results div
+function drawType2ResultsContainerDiv() 
+{
+    // define the container div and append it to the body
+    var type2ResultsContainerDiv = document.createElement("div");
+    document.body.appendChild(type2ResultsContainerDiv);
+    type2ResultsContainerDiv.className = "resultsContainerDiv";
+
+    // draw the copy to clipboard button
+    drawCopyToClipboardButton(type2ResultsContainerDiv);
+
+    // if no description hashtags are provided, draw an empty div
+    if (finalDescriptionHashtags == undefined)
+    {
+        drawHashtagResultsDiv(type2ResultsContainerDiv, [], hashtagType2RequiredInputArray[0]["ID"]);
+    }
+    // otherwise, add the hashtags
+    else 
+    {
+        drawHashtagResultsDiv(type2ResultsContainerDiv, finalDescriptionHashtags, hashtagType2RequiredInputArray[0]["ID"]);
+    }
+
+    // draw the spacer div
+    drawHashtagResultsSpacerDiv(type2ResultsContainerDiv, spacerQuantity);
+
+     // if no location hashtags are provided, draw an empty div
+     if (finalMallLocationHashtags == undefined)
+     {
+         drawHashtagResultsDiv(type2ResultsContainerDiv, [], hashtagType2RequiredInputArray[1]["ID"]);
+     }
+     // otherwise, add the hashtags
+     else 
+     {
+         drawHashtagResultsDiv(type2ResultsContainerDiv, finalMallLocationHashtags, hashtagType2RequiredInputArray[1]["ID"]);
+     }
+
+    // define the bonus hashtags list
+    var mallBonusHashtagArray = ['#carfinds', '#ride', '#drive', '#car', '#cars', '#funcar', '#classic', '#classiccars', '#carsgram', '#auto', '#speed', '#carpic', '#carsofinstagram', '#nostalgia', '#treasure', '#obscure', '#random', '#obscurecars', '#randomcars', '#anotherera', '#oldiebutgoodie', '#timewarp', '#carclub', '#instauto', '#carstagram', '#motor', '#street']
+    
+    // convert the hashtags above to a formatted string
+    var finalMallBonusHashtags = convertArrayToHashtags(mallBonusHashtagArray);
+
+    // count how many hashtags are found in each hashtag string, and add them together
+    //console.log(finalMakeModelHashtags);
+    if (finalDescriptionHashtags.length == 0)
+    {
+        var finalDescriptionHashtagsLength = 0;
+    } 
+    else
+    {
+        var finalDescriptionHashtagsLength = finalDescriptionHashtags.split(hash).length-1;
+    }
+
+    if (finalMallLocationHashtags.length == 0)
+    {
+        var finalMallLocationHashtagsLength = 0;
+    } 
+    else
+    {
+        var finalMallLocationHashtagsLength = finalMallLocationHashtags.split(hash).length-1;
+    }
+
+
+    var type2FinalHashtagArrayTotalLength = (finalDescriptionHashtagsLength + finalMallLocationHashtagsLength + finalMallBonusHashtags.split(hash).length-1);
+    console.log("finalMallHashtags # occurence = " + type2FinalHashtagArrayTotalLength);
+
+    // test array length for compliance with maxHashtags rule, and trim if it's too long
+    if (type2FinalHashtagArrayTotalLength > maxHashtags) 
+    {
+        delta = type2FinalHashtagArrayTotalLength - maxHashtags;
+        console.log("Number of hashes removed = " + delta);
+
+        // trim the array
+        var mallBonusHashtagArrayTrimmed = mallBonusHashtagArray.splice(0, mallBonusHashtagArray.length - delta);
+
+        // redefine the bonus tags using their trimmed version
+        mallBonusHashtagArray = mallBonusHashtagArrayTrimmed;
+    }
+
+    finalMallBonusHashtags = convertArrayToHashtags(mallBonusHashtagArray);
+
+    bonusDivText = document.createTextNode(finalMallBonusHashtags);
+
+    // draw the bonus tag div
+    drawHashtagResultsDiv(type2ResultsContainerDiv, finalMallBonusHashtags, "finalCarBonusHashtags");
+}
+
+// define how to draw the master type2 div
+function drawHashtagType2MasterDiv()
+{
+    // only draw the form and results divs if they haven't been built already
+    if ((document.getElementById(hashtagType2RequiredInputIDArray[0]) == undefined))
+    {
+        // draw the form divs
+        drawType2FormsContainerDiv();
+        // draw the results divs
+        drawType2ResultsContainerDiv();
+    }
+    // hide the other option divs if they are present
+    if ((document.getElementById(hashtagType1RequiredInputIDArray[0]) != undefined))
+    {
+        ((document.getElementById(hashtagType1RequiredInputIDArray[0]))).style.display = "none";
+    }
 }
 
 drawHeaderDiv();
