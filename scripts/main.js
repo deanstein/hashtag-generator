@@ -181,12 +181,11 @@ function drawTypicalTextboxAndLabel(containerDiv, inputName, inputLabel, default
 // define how to draw the copy to clipboard button
 function drawCopyToClipboardButton(containerDiv)
 {
-    new ClipboardJS('button', {
-        container: document.getElementById(containerDiv)
-    });
-    copyToClipboardButton = document.createElement("button");
+    new ClipboardJS('.button');
+    var copyToClipboardButton = document.createElement("button");
     copyToClipboardButton.innerHTML = "Copy to Clipboard";
     copyToClipboardButton.className = "button";
+    copyToClipboardButton.setAttribute("data-clipboard-target", ".resultsContainerDiv");
     copyToClipboardButton.id = "copyToClipboardButton";
     containerDiv.appendChild(copyToClipboardButton);
 }
@@ -205,7 +204,7 @@ function drawHashtagResultsDiv(containerDiv, divContents, divClass)
 function drawHashtagResultsSpacerDiv(containerID, quantity)
 {
     var hashtagResultsSpacerDiv = document.createElement("div");
-    hashtagResultsSpacerDiv.id = spacerID;
+    //hashtagResultsSpacerDiv.id = spacerID;
     hashtagResultsSpacerDiv.className = spacerID;
     hashtagResultsSpacerDiv.innerHTML = [];
     // draw the div as many times as specifid
