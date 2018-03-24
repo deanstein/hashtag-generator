@@ -14,8 +14,9 @@
     padding-bottom: 10px;
 }
 
-.typeCheck {
+.typeCheckLabel {
     font-size: 18px;
+    margin-right: 10px;
 }
 
 /**** common styles ****/
@@ -64,7 +65,7 @@
 
 /**** nostalgia.obscura ****/
 
-.makeModelInputResults {
+.makeModelInputResults, descriptionInputResults {
     background-color: lightpink;
 }
 
