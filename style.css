@@ -43,10 +43,6 @@
     padding-left: 10px;
 }
 
-.spacerDiv {
-    background-color: lavender;
-}
-
 .formsContainerDiv {
     background-color: white;
 }
@@ -59,20 +55,24 @@
 }
 
 /*** all resulting hashtags ***/
-.makeModelInputResults, .locationInputResults, .finalCarBonusHashtagsResults, spacerDiv {
+.nostalgiaobscuraMakeModelInputResults, .nostalgiaobscuraLocationInputResults, .nostalgiaobscuraFinalCarBonusHashtagsResults, .cinderellacityprojectDescriptionInputResults, .cinderellacityprojectLocationInputResults, .cinderellacityprojectFinalMallBonusHashtagsResults, spacerDiv {
     font-size: 26px;
 }
 
-/**** nostalgia.obscura ****/
+/**** specific tag colors ****/
 
-.makeModelInputResults, descriptionInputResults {
+.nostalgiaobscuraMakeModelInputResults, .cinderellacityprojectDescriptionInputResults {
     background-color: lightpink;
 }
 
-.locationInputResults {
+.nostalgiaobscuraLocationInputResults, .cinderellacityprojectLocationInputResults {
     background-color: rgb(174, 221, 174);
 }
 
-.finalCarBonusHashtagsResults {
+.nostalgiaobscuraFinalCarBonusHashtagsResults, .cinderellacityprojectFinalMallBonusHashtagsResults {
     background-color: lightyellow;
+}
+
+.spacerDiv {
+    background-color: lavender;
 }
