@@ -1,3 +1,5 @@
+// location: deanstein.github.io/HashtagGenerator/index.html
+
 var scriptVersion = "2.00.0";
 
 var hash = "#";
