@@ -1,6 +1,6 @@
 // location: deanstein.github.io/HashtagGenerator/index.html
 
-var scriptVersion = "2.00.0";
+var scriptVersion = "2.01.0";
 
 var hash = "#";
 var maxHashtags = 30;
@@ -9,7 +9,7 @@ var spacerSymbol = ".";
 var spacerQuantity = 3;
 var spacerID = "SpacerDiv";
 
-// define hashtagType1
+/*** define hashtagType1 ***/
 var hashtagType1 = "nostalgiaobscura";
 var hashtagType1RequiredInputArray = [{ID: "MakeModelInput", label: "Make, Model, or Other Info"}, {ID: "LocationInput", label: "Location"}];
 var hashtagType1RequiredInputIDArray = [];
@@ -17,25 +17,35 @@ for (a = 0; a <= hashtagType1RequiredInputArray.length - 1; a++)
 {
     hashtagType1RequiredInputIDArray.push(hashtagType1RequiredInputArray[a]["ID"]);
 }
+// define the hashtagType1 bonus hashtags list
+const carBonusHashtagArray = ['#carspotting', '#carfinds', '#carshot', '#spotted', '#classic', '#classiccars', '#carstagram', '#carsofinstagram', '#auto', '#speed', '#carpic', '#nostalgia', '#cartreasure', '#oldschool', '#obscurecars', '#randomcars', '#oldsteel', '#oldiebutgoodie', '#timewarp', '#carclub', '#instauto', '#carstagram', '#motor', '#street', '#drive', '#car', '#cars', '#obscure', '#random']
+var finalCarBonusHashtags = convertArrayToHashtags(carBonusHashtagArray);
 
-// define hashTagType2
+/*** define hashagType2 ***/
+// define the default mall location tags
+mallLocationString = "englewood colorado englewoodcolorado cinderellacity cinderellacitymall";
+var finalMallLocationHashtags = convertStringToHashtags(mallLocationString);
+var finalMallLocationHashtagsLength = finalMallLocationHashtags.split(hash).length;
+
 var hashtagType2 = "cinderellacityproject";
-var hashtagType2RequiredInputArray = [{ID: "DescriptionInput", label: "Additional Description"}];
+var hashtagType2RequiredInputArray = [{ID: "DescriptionInput", label: "Additional Description", defaultText: ""}, {ID: "LocationInput", label: "Location", defaultText: mallLocationString}];
 var hashtagType2RequiredInputIDArray = [];
 for (a = 0; a <= hashtagType2RequiredInputArray.length - 1; a++)
 {
     hashtagType2RequiredInputIDArray.push(hashtagType2RequiredInputArray[a]["ID"]);
 }
+// define the hashtagType2 bonus hashtags list
+var mallBonusHashtagArray = ['#retro', '#vintage', '#retroretail', '#retail', '#retailhistory', '#history', '#store', '#storefront', '#mall', '#shopping', '#shoppingmall', '#architecture', '#deadmall', '#outofbusiness', '#ghostmall', '#deadmalls', '#urbandecay', '#retaildeath']
 
 // define how to convert input to hashtag strings
 function convertStringToHashtags(data)
 {
     // split the incoming data at each space character
-    dataSplit = data.split(" ");
+    var dataSplit = data.split(" ");
     //console.log("dataSplit = " + dataSplit);
 
     // set empty array
-    dataHashArray = [];
+    var dataHashArray = [];
 
     // only generate hashes if the received data is not empty
     if (dataSplit != "")
@@ -78,6 +88,30 @@ function convertArrayToHashtags(data)
     //console.log(".finalHashTags = " + finalDataHashtags);
 
     return finalDataHashtags;
+}
+
+// define how to add the bonus hashtag array length + all text input hashtag array length
+function countAllHashtags(hashtagType, requiredInputArray, bonusArray)
+{
+    var requiredInputCount = requiredInputArray.length;
+    // for each of the textboxes associated with this hashtagType, get their length and add them together
+    var totalInputHashtagCount = 0;
+    for (var i = 0; i < requiredInputCount; i++)
+    {
+        var currentHashtagInputID = hashtagType + requiredInputArray[i]["ID"];
+        if (document.getElementById(currentHashtagInputID).value !== "")
+        {
+            currentHashtagInputCount = document.getElementById(currentHashtagInputID).value.split(" ").length;
+        } else
+        {
+            currentHashtagInputCount = 0;
+        }
+        console.log("seeing " + currentHashtagInputCount + " hashtags entered in textbox ID: " + currentHashtagInputID);
+        totalInputHashtagCount = totalInputHashtagCount + currentHashtagInputCount;
+    }
+
+    var totalInputHashtags = totalInputHashtagCount + bonusArray.length;
+    return totalInputHashtags;
 }
 
 /****** HTML instructions ******/
@@ -254,7 +288,7 @@ function drawHashtagResultsSpacerDiv(hashtagType, inputType, containerID, quanti
     hashtagResultsSpacerDiv.id = hashtagType + inputType + spacerID + i;
     hashtagResultsSpacerDiv.className = spacerID;
     hashtagResultsSpacerDiv.innerHTML = [];
-    // draw the div as many times as specifid
+    // draw the div as many times as specified
     containerID.appendChild(hashtagResultsSpacerDiv);
     }
 }
@@ -281,14 +315,21 @@ function drawType1FormsContainerDiv(containerDiv)
         drawTypicalTextboxAndLabel(type1FormsContainerDiv, hashtagType1 + hashtagType1RequiredInputArray[i]["ID"], hashtagType1RequiredInputArray[i]["label"]);
     }
 
+    var totalInputHashtagCount = 0;
+    var totalRemovedInputHashtagArray = [];
+
     // for each text box, set the upkey action to trigger the content check update
     for (var b = 0; b < hashtagType1RequiredInputIDArray.length; b++)
     {
-        document.getElementById(hashtagType1 + hashtagType1RequiredInputArray[b]["ID"]).onkeyup = function(b)
+        // get the number of words in the current input, then compare to previous and execute based on the delta
+        document.getElementById(hashtagType1 + hashtagType1RequiredInputArray[b]["ID"]).onkeyup = function()
         {
+            // get the current input and convert it to hashtags
             var currentInputString = this.value;
             var convertedInputString = convertStringToHashtags(currentInputString);
             //console.log("updating textbox ID " + this.id + " to include this new input text: " + convertedInputString);
+
+            // update this input's associated results div with the latest input
             updateInnerHTML(this.id + "Results", convertedInputString);
             
             // update the spacers
@@ -304,8 +345,28 @@ function drawType1FormsContainerDiv(containerDiv)
                 }
             }
 
-        };
+            // get the total hashtag count, and adjust if over the max
+            var type1TotalHashtagCount = countAllHashtags(hashtagType1, hashtagType1RequiredInputArray, carBonusHashtagArray);
+            if (type1TotalHashtagCount > maxHashtags)
+            {
+                console.log("max hashtags reached")
+                totalRemovedInputHashtagArray.push(carBonusHashtagArray.pop());
+                console.log("removed a bonus hashtag. number of bonus hashes removed: " + totalRemovedInputHashtagArray.length);
+            }
+
+            if (type1TotalHashtagCount < maxHashtags)
+            {
+                console.log("below the max hashtag threshold")
+                carBonusHashtagArray.push(totalRemovedInputHashtagArray.pop());
+                console.log("adding a bonus hashtag back. number of bonus hashes remaining to add: " + totalRemovedInputHashtagArray.length);
+            }
+
+            finalCarBonusHashtags = convertArrayToHashtags(carBonusHashtagArray);
+            // update the bonus hashtag div
+            updateInnerHTML(hashtagType1 + "FinalCarBonusHashtags" + "Results", finalCarBonusHashtags);
+        }
     }
+
     // create and append the hashtag count input
     var hashtagCountInputID = "hashtagCountInput";
     drawTypicalTextboxAndLabel(type1FormsContainerDiv, hashtagType1 + hashtagCountInputID, "Max Hashtag Count", maxHashtags);
@@ -375,49 +436,6 @@ function drawType1ResultsContainerDiv(containerDiv)
     // draw spacer divs again
     drawHashtagResultsSpacerDiv(hashtagType1, hashtagType1RequiredInputArray[1]["ID"], type1ResultsCopyableDiv, spacerQuantity);
 
-    // define the bonus hashtags list
-    var carBonusHashtagArray = ['#carspotting', '#carfinds', '#carshot', '#spotted', '#classic', '#classiccars', '#carstagram', '#carsofinstagram', '#auto', '#speed', '#carpic', '#nostalgia', '#cartreasure', '#oldschool', '#obscurecars', '#randomcars', '#oldsteel', '#oldiebutgoodie', '#timewarp', '#carclub', '#instauto', '#carstagram', '#motor', '#street', '#drive', '#car', '#cars', '#obscure', '#random']
-
-    //console.log(finalMakeModelHashtags);
-    if (finalMakeModelHashtags.length == 0)
-    {
-        var finalMakeModelHashtagsLength = 0;
-    } 
-    else
-    {
-        var finalMakeModelHashtagsLength = finalMakeModelHashtags.split(hash).length-1;
-    }
-
-    if (finalLocationHashtags.length == [])
-    {
-        finalLocationHashtagsLength = 0;
-    }
-    else 
-    {
-        finalLocationHashtagsLength = finalLocationHashtags.split(hash).length-1;
-    }
-    
-    // count how many hashtags are found in each hashtag string, and add them together
-    var type1FinalHashtagArrayTotalLength = (finalMakeModelHashtagsLength + finalLocationHashtagsLength + carBonusHashtagArray.length);
-    console.log(hashtagType2 + " count = " + type1FinalHashtagArrayTotalLength);
-
-    // test array length for compliance with maxHashtags rule, and trim if it's too long
-    if (type1FinalHashtagArrayTotalLength > maxHashtags) 
-    {
-        delta = type1FinalHashtagArrayTotalLength - maxHashtags;
-        console.log("Number of hashes removed = " + delta);
-
-        // trim the array
-        carBonusHashtagArrayTrimmed = carBonusHashtagArray.splice(0, carBonusHashtagArray.length - delta);
-
-        // redefine the bonus tags using their trimmed version
-        carBonusHashtagArray = carBonusHashtagArrayTrimmed;
-    }
-
-    finalCarBonusHashtags = convertArrayToHashtags(carBonusHashtagArray);
-
-    bonusDivText = document.createTextNode(finalCarBonusHashtags);
-
     // draw the bonus tag div
     drawHashtagResultsDiv(type1ResultsCopyableDiv, finalCarBonusHashtags, hashtagType1, "FinalCarBonusHashtags");
 }
@@ -450,8 +468,11 @@ function drawType2FormsContainerDiv(containerDiv)
     // for each required input, create textboxes and labels
     for (var i = 0; i <= hashtagType2RequiredInputArray.length - 1; i++)
     {
-        drawTypicalTextboxAndLabel(type2FormsContainerDiv, hashtagType2 + hashtagType2RequiredInputArray[i]["ID"], hashtagType2RequiredInputArray[i]["label"]);
+        drawTypicalTextboxAndLabel(type2FormsContainerDiv, hashtagType2 + hashtagType2RequiredInputArray[i]["ID"], hashtagType2RequiredInputArray[i]["label"], hashtagType2RequiredInputArray[i]["defaultText"]);
     }
+
+    var totalInputHashtagCount = 0;
+    var totalRemovedInputHashtagArray = [];
 
     // for each text box, set the upkey action to trigger the content check update
     for (var b = 0; b < hashtagType2RequiredInputIDArray.length; b++)
@@ -477,6 +498,25 @@ function drawType2FormsContainerDiv(containerDiv)
                 }
             }
 
+            // get the total hashtag count, and adjust if over the max
+            var type2TotalHashtagCount = countAllHashtags(hashtagType2, hashtagType2RequiredInputArray, mallBonusHashtagArray);
+            if (type2TotalHashtagCount > maxHashtags)
+            {
+                console.log("max hashtags reached")
+                totalRemovedInputHashtagArray.push(mallBonusHashtagArray.pop());
+                console.log("removed a bonus hashtag. number of bonus hashes removed: " + totalRemovedInputHashtagArray.length);
+            }
+
+            if (type2TotalHashtagCount < maxHashtags)
+            {
+                console.log("below the max hashtag threshold")
+                mallBonusHashtagArray.push(totalRemovedInputHashtagArray.pop());
+                console.log("adding a bonus hashtag back. number of bonus hashes remaining to add: " + totalRemovedInputHashtagArray.length);
+            }
+
+            finalMallBonusHashtags = convertArrayToHashtags(mallBonusHashtagArray);
+            // update the bonus hashtag div
+            updateInnerHTML(hashtagType2 + "FinalMallBonusHashtags" + "Results", finalMallBonusHashtags);
         };
     }
     // create and append the hashtag count input
@@ -523,9 +563,6 @@ function drawType2ResultsContainerDiv(containerDiv)
     // draw the spacer div
     drawHashtagResultsSpacerDiv(hashtagType2, hashtagType2RequiredInputArray[0]["ID"], type2ResultsCopyableDiv, spacerQuantity);
 
-    // define the bonus hashtags list
-    var mallBonusHashtagArray = ['#retro', '#vintage', '#retroretail', '#retail', '#history', '#store', '#storefront', '#mall', '#shopping', '#shoppingmall', '#architecture', '#deadmall', '#ghostmall', '#deadmalls', '#urbandecay', '#retaildeath']
-
     // if desciption is provided, convert to hashtags
     if (finalDescriptionHashtags.length == 0)
     {
@@ -535,12 +572,6 @@ function drawType2ResultsContainerDiv(containerDiv)
     {
         var finalDescriptionHashtagsLength = finalDescriptionHashtags.split(hash).length-1;
     }
-
-    // set the default mall location tags
-    mallLocationString = "englewood colorado englewoodcolorado cinderellacity cinderellacitymall";
-
-    var finalMallLocationHashtags = convertStringToHashtags(mallLocationString);
-    var finalMallLocationHashtagsLength = finalMallLocationHashtags.split(hash).length;
 
     // draw the mall location tag div
     drawHashtagResultsDiv(type2ResultsCopyableDiv, finalMallLocationHashtags, hashtagType2, "LocationInput");
@@ -555,26 +586,6 @@ function drawType2ResultsContainerDiv(containerDiv)
 
     finalMallBonusHashtags = convertArrayToHashtags(mallBonusHashtagArray);
     var finalMallBonusHashtagsLength = finalMallBonusHashtags.split(hash).length;
-
-
-    // count how many hashtags are found in each hashtag string, and add them together
-    var type2FinalHashtagArrayTotalLength = (finalDescriptionHashtagsLength + finalMallLocationHashtagsLength + mallBonusHashtagArray.length);
-    console.log(hashtagType1 + " count = " + type2FinalHashtagArrayTotalLength);
-
-    // test array length for compliance with maxHashtags rule, and trim if it's too long
-    if (type2FinalHashtagArrayTotalLength > maxHashtags) 
-    {
-        delta = type2FinalHashtagArrayTotalLength - maxHashtags;
-        console.log("Number of hashes removed = " + delta);
-
-        // trim the array
-        var mallBonusHashtagArrayTrimmed = mallBonusHashtagArray.splice(0, mallBonusHashtagArray.length - delta);
-
-        // redefine the bonus tags using their trimmed version
-        mallBonusHashtagArray = mallBonusHashtagArrayTrimmed;
-    }
-
-    bonusDivText = document.createTextNode(finalMallBonusHashtags);
 
     // draw the bonus tag div
     drawHashtagResultsDiv(type2ResultsCopyableDiv, finalMallBonusHashtags, hashtagType2, "FinalMallBonusHashtags");
