@@ -1,6 +1,6 @@
 // location: deanstein.github.io/HashtagGenerator/index.html
 
-var scriptVersion = "2.01.0";
+var scriptVersion = "2.01.1";
 
 var hash = "#";
 var maxHashtags = 30;
@@ -35,7 +35,7 @@ for (a = 0; a <= hashtagType2RequiredInputArray.length - 1; a++)
     hashtagType2RequiredInputIDArray.push(hashtagType2RequiredInputArray[a]["ID"]);
 }
 // define the hashtagType2 bonus hashtags list
-var mallBonusHashtagArray = ['#retro', '#vintage', '#retroretail', '#retail', '#retailhistory', '#history', '#store', '#storefront', '#mall', '#shopping', '#shoppingmall', '#architecture', '#deadmall', '#outofbusiness', '#ghostmall', '#deadmalls', '#urbandecay', '#retaildeath']
+var mallBonusHashtagArray = ['#retro', '#vintage', '#retroretail', '#retail', '#mall', '#retailhistory', '#retaildeath', '#history', '#store', '#storefront', '#mall', '#shopping', '#shoppingmall', '#architecture', '#deadmall', '#deadmalls', '#deadmallkings', '#deadmallseries', '#vaporwave', '#mallaesthetic', '#outofbusiness', '#ghostmall', '#urbandecay', '#decay', '#retaildeath', '#nostalgia', '#memories']
 
 // define how to convert input to hashtag strings
 function convertStringToHashtags(data)
