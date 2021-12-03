@@ -230,7 +230,7 @@ function drawTypeCheckDiv()
 
     // set a default radio button to start checked
     type2RadioButton.checked = true;
-    showAccountHashtags(allAccountData[2].accountName);
+    showAccountHashtags(allAccountData[1].accountName);
 }
 
     // radio button behavior
@@ -617,6 +617,7 @@ function drawType2FormsContainerDiv(containerDiv, accountName, requiredInputArra
             // otherwise, add enough back from the removed list to get to the max hashtag count
             else
             {
+                // TODO: this isn't working properly - fix
                 for (var i = 0; i < hashtagDelta; i++)
                 {
                     // as long as we're still below the max
@@ -626,22 +627,6 @@ function drawType2FormsContainerDiv(containerDiv, accountName, requiredInputArra
                     }
                 }
             }
-
-            /*
-            if (type2TotalHashtagCount > currentMaxHashtags)
-            {
-                console.log("max hashtags reached")
-                aRemovedHashtags.push(mallBonusHashtagArray.pop());
-                console.log("removed a bonus hashtag. number of bonus hashes removed: " + aRemovedHashtags.length);
-            }
-
-            if (type2TotalHashtagCount < currentMaxHashtags)
-            {
-                console.log("below the max hashtag threshold")
-                mallBonusHashtagArray.push(aRemovedHashtags.pop());
-                console.log("adding a bonus hashtag back. number of bonus hashes remaining to add: " + aRemovedHashtags.length);
-            }
-            */
 
             finalMallBonusHashtags = convertArrayToHashtags(mallBonusHashtagArray);
             // update the bonus hashtag div
