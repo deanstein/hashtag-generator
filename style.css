@@ -56,21 +56,21 @@
 }
 
 /*** all resulting hashtags ***/
-.nostalgiaobscuraMakeModelInputResults, .nostalgiaobscuraLocationInputResults, .nostalgiaobscuraFinalCarBonusHashtagsResults, .cinderellacityprojectDescriptionInputResults, .cinderellacityprojectLocationInputResults, .cinderellacityprojectFinalMallBonusHashtagsResults, spacerDiv {
+.makeModelInputResults, .finalCarBonusHashtagsResults, .descriptionInputResults, .locationInputResults, .finalMallBonusHashtagsResults, spacerDiv {
     font-size: 26px;
 }
 
 /**** specific tag colors ****/
 
-.nostalgiaobscuraMakeModelInputResults, .cinderellacityprojectDescriptionInputResults {
+.makeModelInputResults, .descriptionInputResults {
     background-color: lightpink;
 }
 
-.nostalgiaobscuraLocationInputResults, .cinderellacityprojectLocationInputResults {
+.locationInputResults {
     background-color: rgb(174, 221, 174);
 }
 
-.nostalgiaobscuraFinalCarBonusHashtagsResults, .cinderellacityprojectFinalMallBonusHashtagsResults {
+.finalCarBonusHashtagsResults, .finalMallBonusHashtagsResults {
     background-color: lightyellow;
 }
 
