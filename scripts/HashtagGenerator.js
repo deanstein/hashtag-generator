@@ -41,6 +41,8 @@ let finalHashtagType1BonusHashtags = convertArrayToHashtags(hashtagType1BonusHas
 
 // the next two hashtags are mall-related, and they share the bonus hashtags
 const mallBonusHashtagArray = ['#history', '#mall', '#deadmall', '#retro', '#vintage', '#vintagemall', '#retroretail', '#retail', '#retaildeath', '#retailhistory', '#retailarchitecture', '#ghostmall', '#suburbandecay', '#suburbia', '#architecture', '#mallaesthetic', '#outofbusiness', '#decay', '#nostalgia'];
+// make a copy of the bonus hashtag array so we don't affect it
+let splicedBonusHashtagArray = [...mallBonusHashtagArray];
 
 /*** cinderellacityproject ***/
 // location tags
@@ -338,7 +340,7 @@ function drawTypicalTextboxAndLabel(containerDiv, inputName, inputLabel, default
 function drawCopyToClipboardButton(containerDiv, hashtagType)
 {
     new ClipboardJS('.button');
-    let target = ".copyableResultsContainerDiv";
+    let target = "." + hashtagType + "CopyableResultsContainerDiv";
     //console.log ("copy button target: " + target);
     let copyToClipboardButton = document.createElement("button");
     copyToClipboardButton.innerHTML = "Copy to Clipboard";
@@ -484,7 +486,7 @@ function drawType1ResultsContainerDiv(containerDiv)
 
     // define the copyable div and append it to the container
     let type1ResultsCopyableDiv = document.createElement("div");
-    type1ResultsCopyableDiv.className = "copyableResultsContainerDiv";
+    type1ResultsCopyableDiv.className = hashtagType1 + "CopyableResultsContainerDiv";
     type1ResultsContainerDiv.appendChild(type1ResultsCopyableDiv);
 
     // if no make/model hashtags are provided, draw an empty div
@@ -604,7 +606,7 @@ function drawType2FormsContainerDiv(containerDiv, accountName, requiredInputArra
             }
 
             // get the total hashtag count, and adjust if over the max
-            let type2TotalHashtagCount = countAllHashtags(accountName, requiredInputArray, mallBonusHashtagArray);
+            let type2TotalHashtagCount = countAllHashtags(accountName, requiredInputArray, splicedBonusHashtagArray);
             let currentMaxHashtags = Number(document.getElementById(accountName + hashtagCountInputID).value);
             let hashtagDelta = currentMaxHashtags - type2TotalHashtagCount;
             let absDelta = Math.abs(hashtagDelta);
@@ -612,7 +614,9 @@ function drawType2FormsContainerDiv(containerDiv, accountName, requiredInputArra
             // if negative, too many hashtags
             if (hashtagDelta < 0)
             {
-                aRemovedHashtags = mallBonusHashtagArray.splice(mallBonusHashtagArray.length - absDelta /*index*/, absDelta /*amount*/);
+                splicedBonusHashtagArray.splice(splicedBonusHashtagArray.length - absDelta /*index*/, absDelta /*amount*/);
+
+                aRemovedHashtags = getDifference(mallBonusHashtagArray, splicedBonusHashtagArray);
             }
             // otherwise, add enough back from the removed list to get to the max hashtag count
             else
@@ -621,14 +625,14 @@ function drawType2FormsContainerDiv(containerDiv, accountName, requiredInputArra
                 for (var i = 0; i < hashtagDelta; i++)
                 {
                     // as long as we're still below the max
-                    if (mallBonusHashtagArray.length < type2TotalHashtagCount)
+                    if (splicedBonusHashtagArray.length < type2TotalHashtagCount)
                     {
-                        mallBonusHashtagArray.push(aRemovedHashtags[i]);
+                        splicedBonusHashtagArray.push(aRemovedHashtags[i]);
                     }
                 }
             }
 
-            finalMallBonusHashtags = convertArrayToHashtags(mallBonusHashtagArray);
+            finalMallBonusHashtags = convertArrayToHashtags(splicedBonusHashtagArray);
             // update the bonus hashtag div
             updateInnerHTML(accountName + "FinalMallBonusHashtags" + "Results", finalMallBonusHashtags);
         };
@@ -644,6 +648,13 @@ function drawType2FormsContainerDiv(containerDiv, accountName, requiredInputArra
     }
     */
 }
+
+// difference between two arrays
+function getDifference(a, b) {
+    return a.filter(element => {
+      return !b.includes(element);
+    });
+  }
 
 // convert description input to hashtags if it's populated
 if (hashtagType2RequiredInputIDArray[0].value != undefined)
@@ -667,7 +678,7 @@ function drawType2ResultsContainerDiv(containerDiv, accountName, reuiredInputArr
     
     // define the copyable div and append it
     let type2ResultsCopyableDiv = document.createElement("div");
-    type2ResultsCopyableDiv.className = "copyableResultsContainerDiv";
+    type2ResultsCopyableDiv.className = accountName + "CopyableResultsContainerDiv";
     type2ResultsContainerDiv.appendChild(type2ResultsCopyableDiv);
 
     // if no description hashtags are provided, draw an empty div
@@ -705,8 +716,7 @@ function drawType2ResultsContainerDiv(containerDiv, accountName, reuiredInputArr
         updateInnerHTML(accountName + "LocationInput" + spacerID + s, spacerSymbol);
     }
 
-    finalMallBonusHashtags = convertArrayToHashtags(mallBonusHashtagArray);
-    let finalMallBonusHashtagsLength = finalMallBonusHashtags.split(hash).length;
+    finalMallBonusHashtags = convertArrayToHashtags(splicedBonusHashtagArray);
 
     // draw the bonus tag div
     drawHashtagResultsDiv(type2ResultsCopyableDiv, finalMallBonusHashtags, accountName, "FinalMallBonusHashtags");
